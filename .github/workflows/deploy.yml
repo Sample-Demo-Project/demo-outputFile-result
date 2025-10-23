@@ -7,7 +7,7 @@ on:
     paths:
       - "uploads/**"
       - "generate_output_gallery.py"
-      - ".github/workflows/autodeploy-folder.yml"
+      - ".github/workflows/deploy.yml"
   workflow_dispatch: {}
 
 permissions:
