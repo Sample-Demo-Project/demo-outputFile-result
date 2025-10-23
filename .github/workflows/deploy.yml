@@ -1,6 +1,12 @@
 name: Build & Deploy Folder Gallery
 
 on:
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - "uploads/**"
+      - "generate_output_gallery.py"
+      - ".github/workflows/deploy.yml"
   push:
     branches: [ "main" ]
     paths:
@@ -20,9 +26,10 @@ concurrency:
 
 jobs:
   build:
+    name: Build output gallery (PR check)
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup Python
@@ -33,16 +40,20 @@ jobs:
       - name: Build gallery (no deps)
         run: |
           python generate_output_gallery.py
-          # 確保一定有首頁（避免部署成功卻 404）
+          # 避免沒有首頁導致部署 404；PR 也一併檢查
           test -f docs/index.html || echo "<!doctype html><meta charset='utf-8'><body><h1>No content</h1></body>" > docs/index.html
 
-      - name: Upload artifact (docs/)
-        uses: actions/upload-pages-artifact@v3
+      # 讓 reviewer 在 PR 介面可下載/預覽產物（不部署）
+      - name: Upload preview artifact (docs/)
+        uses: actions/upload-artifact@v4
         with:
+          name: pr-docs-preview
           path: docs
 
   deploy:
+    name: Deploy to GitHub Pages
     needs: build
+    if: github.event_name == 'push'   # 只在 push 到 main 時部署
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -51,11 +62,16 @@ jobs:
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
-      - name: Deploy to GitHub Pages
+      - name: Upload artifact for Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+      - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
 
-      - name: Show deployed URL (in logs & summary)
+      - name: Show deployed URL
         run: |
           echo "URL: ${{ steps.deployment.outputs.page_url }}"
           echo "### 🌐 GitHub Pages URL" >> $GITHUB_STEP_SUMMARY
