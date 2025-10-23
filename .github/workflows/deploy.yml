@@ -6,7 +6,7 @@ on:
     # 只要學生 push 到 uploads/ 或你調整的資料夾，就會觸發
     paths:
       - "uploads/**"
-      - "generate_folder_gallery.py"
+      - "generate_output_gallery.py"
       - ".github/workflows/autodeploy-folder.yml"
   workflow_dispatch: {}
 
