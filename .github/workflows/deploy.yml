@@ -33,7 +33,7 @@ jobs:
 
       - name: Build gallery (no deps)
         run: |
-          python generate_folder_gallery.py
+          python generate_output_gallery.py
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
