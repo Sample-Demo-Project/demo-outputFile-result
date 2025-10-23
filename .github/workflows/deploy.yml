@@ -3,7 +3,6 @@ name: Auto Deploy Folder Gallery
 on:
   push:
     branches: [ "main" ]
-    # 只要學生 push 到 uploads/ 或你調整的資料夾，就會觸發
     paths:
       - "uploads/**"
       - "generate_output_gallery.py"
@@ -22,6 +21,11 @@ concurrency:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    # 這裡把 URL 掛到環境，會直接在 UI 的 Environments 顯示
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -29,13 +33,13 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12.7"
+          python-version: "3.12"
 
       - name: Build gallery (no deps)
         run: |
           python generate_output_gallery.py
 
-      - name: Setup Pages
+      - name: Configure Pages
         uses: actions/configure-pages@v5
 
       - name: Upload artifact (docs/)
@@ -46,3 +50,9 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Show deployed URL
+        run: |
+          echo "URL: ${{ steps.deployment.outputs.page_url }}"
+          echo "### 🌐 GitHub Pages URL" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.deployment.outputs.page_url }}" >> $GITHUB_STEP_SUMMARY
