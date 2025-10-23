@@ -1,4 +1,4 @@
-name: Build & Deploy Folder Gallery
+name: Build & Deploy Gallery
 
 on:
   push:
