@@ -1,0 +1,44 @@
+name: PR Up-to-date Check
+
+on:
+  pull_request:
+    branches: [ "main" ]
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+
+jobs:
+  check-up-to-date:
+    name: Check branch is up to date with main
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR HEAD commit
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Fetch base branch (main)
+        run: |
+          git fetch origin ${{ github.event.pull_request.base.ref }} --depth=1
+          echo "BASE BRANCH: ${{ github.event.pull_request.base.ref }}"
+          echo "HEAD SHA   : ${{ github.event.pull_request.head.sha }}"
+
+      - name: Verify base is ancestor of PR head
+        run: |
+          BASE=origin/${{ github.event.pull_request.base.ref }}
+          BASE_SHA=$(git rev-parse "$BASE")
+          MB=$(git merge-base HEAD "$BASE")
+          echo "BASE_SHA   : $BASE_SHA"
+          echo "MERGE_BASE : $MB"
+          if [ "$MB" != "$BASE_SHA" ]; then
+            echo "::error title=Out of date::PR 分支不是建立在最新的 ${BASE#origin/} 上，請先 rebase 或 merge 最新的 ${BASE#origin/} 後再送審。"
+            exit 1
+          fi
+          echo "PR 已同步到最新的 ${BASE#origin/}"
+
+      - name: Summarize
+        if: success()
+        run: |
+          echo "### Branch is up-to-date with main" >> $GITHUB_STEP_SUMMARY
