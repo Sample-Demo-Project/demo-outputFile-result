@@ -1,0 +1,48 @@
+name: Auto Deploy Folder Gallery
+
+on:
+  push:
+    branches: [ "main" ]
+    # 只要學生 push 到 uploads/ 或你調整的資料夾，就會觸發
+    paths:
+      - "uploads/**"
+      - "generate_folder_gallery.py"
+      - ".github/workflows/autodeploy-folder.yml"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Build gallery (no deps)
+        run: |
+          python generate_folder_gallery.py
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact (docs/)
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
