@@ -1,0 +1,21 @@
+=== Temperature Trend Summary (NumPy-based) ===
+Global slope (°C/year): 0.0109
+France slope (°C/year): 0.0193
+Germany slope (°C/year): 0.0221
+Spain slope (°C/year): 0.0200
+Italy slope (°C/year): 0.0188
+United Kingdom slope (°C/year): 0.0162
+
+Cities warming faster than their countries (Top 5 by diff slope):
+- London, United Kingdom: diff slope=0.0026 °C/year (n=64)
+- Lyon, France: diff slope=0.0016 °C/year (n=64)
+- Paris, France: diff slope=0.0010 °C/year (n=64)
+- Berlin, Germany: diff slope=0.0004 °C/year (n=64)
+- Rome, Italy: diff slope=0.0001 °C/year (n=64)
+
+Cities warming slower than their countries (Top 5 by diff slope):
+- Madrid, Spain: diff slope=0.0001 °C/year (n=64)
+- Rome, Italy: diff slope=0.0001 °C/year (n=64)
+- Berlin, Germany: diff slope=0.0004 °C/year (n=64)
+- Paris, France: diff slope=0.0010 °C/year (n=64)
+- Lyon, France: diff slope=0.0016 °C/year (n=64)
