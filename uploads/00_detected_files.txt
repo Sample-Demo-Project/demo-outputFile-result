@@ -1,0 +1,6 @@
+已偵測到的檔案：
+- OK GlobalTemperatures.csv  (~3193 行)
+- OK GlobalLandTemperaturesByCountry.csv  (~577463 行)
+- OK GlobalLandTemperaturesByCity.csv  (~8599213 行)
+- OK GlobalLandTemperaturesByMajorCity.csv  (~239178 行)
+- OK GlobalLandTemperaturesByState.csv  (~645676 行)
