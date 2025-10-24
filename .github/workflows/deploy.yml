@@ -2,16 +2,23 @@ name: Build & Deploy Gallery
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "dev" ]
     paths:
       - "uploads/**"
       - "generate_output_gallery.py"
       - ".github/workflows/deploy.yml"
   workflow_dispatch: {}
 
+# === 填這裡：DEV 站點目標 ===
+env:
+  DEV_REPO_OWNER: Sample-Demo-Project     # 例：howgowin
+  DEV_REPO_NAME:  demo-outputFile-result-dev        # 例：gallery-dev
+  # 如果 dev repo 有自訂網域（CNAME），可以改成那個網域；否則會自動用 GitHub 預設網址
+  DEV_CUSTOM_DOMAIN: ""                 # 例：dev.example.com（留空就用預設）
+
 permissions:
-  contents: read
-  pages: write
+  contents: write       # 需要推送到 dev repo
+  pages: write          # main 分支使用 GitHub Pages
   id-token: write
 
 concurrency:
@@ -36,12 +43,24 @@ jobs:
           # 確保一定有首頁（避免部署成功卻 404）
           test -f docs/index.html || echo "<!doctype html><meta charset='utf-8'><body><h1>No content</h1></body>" > docs/index.html
 
-      - name: Upload artifact (docs/)
+      # 供 main 的 GitHub Pages artifact
+      - name: Upload artifact for Pages (docs/)
+        if: github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v3
         with:
           path: docs
 
-  deploy:
+      # 供 dev 分支部署到另一個 repo 使用（先存成一般 artifact）
+      - name: Upload build as generic artifact
+        if: github.ref == 'refs/heads/dev'
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-docs
+          path: docs
+
+  # --- main 分支：部署到本 repo 的 GitHub Pages ---
+  deploy_main:
+    if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
     environment:
@@ -51,7 +70,7 @@ jobs:
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
-      - name: Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages (this repo)
         id: deployment
         uses: actions/deploy-pages@v4
 
@@ -60,3 +79,43 @@ jobs:
           echo "URL: ${{ steps.deployment.outputs.page_url }}"
           echo "### 🌐 GitHub Pages URL" >> $GITHUB_STEP_SUMMARY
           echo "${{ steps.deployment.outputs.page_url }}" >> $GITHUB_STEP_SUMMARY
+
+  # --- dev 分支：部署到另一個 dev repo 的 gh-pages ---
+  deploy_dev:
+    if: github.ref == 'refs/heads/dev'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download built docs
+        uses: actions/download-artifact@v4
+        with:
+          name: site-docs
+          path: site-docs
+
+      # 部署到目標 DEV repo 的 gh-pages
+      - name: Deploy to DEV repo gh-pages
+        id: dev_deploy
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          repository-name: ${{ env.DEV_REPO_OWNER }}/${{ env.DEV_REPO_NAME }}
+          branch: gh-pages
+          folder: site-docs
+          clean: true
+          single-commit: true
+          token: ${{ secrets.DEV_PAGES_TOKEN }}
+
+      # 顯示 DEV 站網址（支援自訂網域或預設 GitHub Pages 網址）
+      - name: Show DEV site URL (in logs & summary)
+        env:
+          DEV_REPO_OWNER: ${{ env.DEV_REPO_OWNER }}
+          DEV_REPO_NAME:  ${{ env.DEV_REPO_NAME }}
+          DEV_CUSTOM_DOMAIN: ${{ env.DEV_CUSTOM_DOMAIN }}
+        run: |
+          if [ -n "$DEV_CUSTOM_DOMAIN" ]; then
+            DEV_URL="https://${DEV_CUSTOM_DOMAIN}/"
+          else
+            DEV_URL="https://${DEV_REPO_OWNER}.github.io/${DEV_REPO_NAME}/"
+          fi
+          echo "URL: ${DEV_URL}"
+          echo "### 🚧 DEV Preview URL" >> $GITHUB_STEP_SUMMARY
+          echo "${DEV_URL}" >> $GITHUB_STEP_SUMMARY
