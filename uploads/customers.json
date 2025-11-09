@@ -1,0 +1,46 @@
+{
+  "generated_at": "2025-09-14T10:30:00Z",
+  "customers": [
+    {
+      "id": "C001",
+      "name": "Alice Johnson",
+      "email": "alice@example.com",
+      "active": true,
+      "joined_at": "2024-11-02",
+      "orders": [
+        {"order_id": "O-1001", "total": 79.5, "currency": "USD", "tags": ["keyboard", "electronics"]},
+        {"order_id": "O-1005", "total": 19.99, "currency": "USD", "tags": ["mouse"]}
+      ]
+    },
+    {
+      "id": "C002",
+      "name": "Bob Lee",
+      "email": "bob.lee@example.com",
+      "active": false,
+      "joined_at": "2023-05-20",
+      "orders": []
+    },
+    {
+      "id": "C003",
+      "name": "Charlie Chen",
+      "email": "charlie@example.com",
+      "active": true,
+      "joined_at": "2025-01-15",
+      "orders": [
+        {"order_id": "O-1010", "total": 129.0, "currency": "USD", "tags": ["audio", "electronics"]},
+        {"order_id": "O-1012", "total": 34.0,  "currency": "USD", "tags": ["adapter"]}
+      ]
+    },
+    {
+      "id": "C004",
+      "name": "Dana Wu",
+      "email": "dana.wu@example.com",
+      "active": true,
+      "joined_at": null,
+      "orders": [
+        {"order_id": "O-1020", "total": 49.99, "currency": "USD", "tags": ["camera"]},
+        {"order_id": "O-1023", "total": 0, "currency": "USD", "tags": []}
+      ]
+    }
+  ]
+}
