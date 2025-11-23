@@ -1,0 +1,5 @@
+Temperatures above average: [22.5, 24.1, 25.0, 23.4]
+Temperatures in Fahrenheit: [72.5, 75.38, 67.64, 70.34, 77.0, 74.12, 68.36]
+Number of days below 22°C: 3
+Temperatures below 22°C: [19.8, 21.3, 20.2]
+Temperatures after warming: [22.5, 24.1, 20.8, 22.3, 25.0, 23.4, 21.2]
