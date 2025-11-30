@@ -1,0 +1,62 @@
+{
+  "A01": {
+    "2025-06-01": {
+      "count": 12,
+      "temp_mean": 23.3,
+      "temp_min": 22.4,
+      "temp_max": 24.1,
+      "temp_p95": 24.1,
+      "humidity_mean": 58.8,
+      "status_warn_ratio": 0.08
+    },
+    "2025-06-02": {
+      "count": 7,
+      "temp_mean": 22.7,
+      "temp_min": 22.0,
+      "temp_max": 23.3,
+      "temp_p95": 23.3,
+      "humidity_mean": 58.4,
+      "status_warn_ratio": 0.0
+    }
+  },
+  "B17": {
+    "2025-06-01": {
+      "count": 10,
+      "temp_mean": 28.2,
+      "temp_min": 27.7,
+      "temp_max": 28.7,
+      "temp_p95": 28.7,
+      "humidity_mean": 47.6,
+      "status_warn_ratio": 0.1
+    },
+    "2025-06-02": {
+      "count": 7,
+      "temp_mean": 27.4,
+      "temp_min": 27.1,
+      "temp_max": 27.7,
+      "temp_p95": 27.7,
+      "humidity_mean": 48.6,
+      "status_warn_ratio": 0.14
+    }
+  },
+  "C03": {
+    "2025-06-01": {
+      "count": 10,
+      "temp_mean": 20.1,
+      "temp_min": 19.4,
+      "temp_max": 21.0,
+      "temp_p95": 20.9,
+      "humidity_mean": 60.6,
+      "status_warn_ratio": 0.1
+    },
+    "2025-06-02": {
+      "count": 7,
+      "temp_mean": 20.6,
+      "temp_min": 19.9,
+      "temp_max": 21.0,
+      "temp_p95": 21.0,
+      "humidity_mean": 63.7,
+      "status_warn_ratio": 0.0
+    }
+  }
+}
